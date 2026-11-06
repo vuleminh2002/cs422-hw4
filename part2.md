@@ -86,7 +86,7 @@ Gurobi decides three things together:
 2. **How traffic travels (`f`).** For example, traffic from node 0 to node 4 might travel along **0 → 2 → 4**. The model records how much of that demand uses each link. It can split a demand across multiple paths.
 3. **How much demand can be delivered (`\lambda`).** Gurobi tries to make $\lambda$ as large as possible without violating any of the rules.
 
-For every choice, the model checks that each node has four links in and out, no link carries more than one unit, and all scaled demands reach their destinations. **The final topology is the list of links where $x_{uv}=1$.** We can also read $f$ to see how traffic is routed and $\lambda$ to see the achieved concurrent flow.
+For every choice, the model checks that each node has four links in and out, no link carries more than one unit, and all scaled demands reach their destinations. **The final topology is the list of links where $x_{uv}=1$.** 
 
 To keep the model smaller, we only track routing for pairs that actually request traffic ($D_{st}>0$). If all demands are zero, there is no meaningful finite maximum for $\lambda$, so that case is handled separately.
 
@@ -96,26 +96,53 @@ The program is not limited to a ring, chordal ring, or any other predefined grap
 
 For each possible topology, the model also allows any routing that obeys flow conservation and link capacities. This means that a better topology, if one existed, would also be a possible solution to the same optimization problem.
 
-Suppose Gurobi reports that its solution is **optimal**, with value $\lambda^*$. If another allowed network could carry a larger multiplier, that network and its routing would satisfy our constraints and give Gurobi a better feasible answer. This would contradict the optimal result. Therefore, the returned topology maximizes concurrent flow **for the given input matrix**.
+If Gurobi reports an optimal solution, it means no other valid topology can achieve a higher concurrent flow. This is because our model considers all possible topologies that satisfy the constraints. Therefore, the topology returned by Gurobi is the best for the given traffic matrix. **for the given input matrix**.
 
 This guarantee requires Gurobi to finish and report an *optimal* solution. Finding a valid topology without proving optimality is not enough.
 
-## 6. Sample result and verification
 
-The provided sample includes demands $D_{04}=4$, $D_{15}=3$, $D_{26}=2$, and $D_{37}=1$, with additional demands in the reverse direction. The accompanying implementation reports:
 
-- **Optimal concurrent flow:** $\lambda=1$
-- **Selected directed links:** 32
-- **Maximum link load:** 1
 
-We can independently establish an upper bound for this example. Node 0 requests 4 units of outgoing traffic, but it has only four outgoing links, each of capacity 1. Therefore:
 
-$$
-4\lambda\le4\quad\Rightarrow\quad \lambda\le1.
-$$
+Algorithm BestTopologyMILP(T):
 
-The reported feasible solution reaches $\lambda=1$, so it matches the upper bound and is optimal **for this sample**. The same MILP formulation works for any nonzero traffic matrix satisfying the hose-model conditions.
+Input:
+    T = 8 × 8 arbitrary traffic matrix
+    n = 8 nodes
+    d = 4 incoming and outgoing links per node
+    Each link has capacity 1
 
-**Implementation:** [Insert GitHub/GitLab repository link to the Gurobi Python code and relevant lines.]
+Output:
+    Optimal topology G
+    Maximum concurrent flow λ
+    Traffic routing
 
-*Modeling assumption:* This formulation permits **at most one directed link per ordered pair**, since $x_{uv}$ is binary. If parallel links are allowed, the model must use integer link-count variables instead.
+1. Validate the traffic matrix:
+    - All demands must be nonnegative
+    - T[i][i] = 0
+    - At least one demand must be positive
+
+2. Create decision variables:
+    - x[u][v] = 1 if link u → v exists, otherwise 0
+    - f[s][t][u][v] = traffic from s to t using link u → v
+    - λ = concurrent flow multiplier
+
+3. Add constraints:
+    - Every node has exactly 4 outgoing links
+    - Every node has exactly 4 incoming links
+    - Total traffic on each link ≤ 1 if the link exists
+    - Flow conservation holds for every demand
+    - All flow variables and λ are nonnegative
+
+4. Set objective:
+    Maximize λ
+
+5. Solve the MILP using Gurobi
+
+6. If Gurobi proves optimality:
+    - Construct G using links where x[u][v] = 1
+    - Extract the traffic routing from f
+    - Return G, λ, and routing
+
+7. Otherwise:
+    Report that optimality was not established
