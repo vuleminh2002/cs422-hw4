@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="680" viewBox="0 0 600 640" role="img" aria-labelledby="title description">
+  <title id="title">Nine-node chordal ring with four incoming and outgoing links per node</title>
+  <desc id="description">Nodes zero through eight are arranged clockwise around a circle. Solid blue lines connect neighbors, and dashed orange chords connect nodes three positions apart. Every line represents two opposite directed links, each of capacity one. Crossings are not nodes.</desc>
+  <rect width="600" height="640" fill="white"/>
+  <text x="300" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#172033">Chordal ring: n = 9, d = 4</text>
+  <g stroke="#bd5a00" stroke-width="2.5" stroke-dasharray="8 5" fill="none">
+    <path d="M300 60 L508 418"/>
+    <path d="M454 116 L382 524"/>
+    <path d="M536 257 L218 524"/>
+    <path d="M508 418 L92 418"/>
+    <path d="M382 524 L64 257"/>
+    <path d="M218 524 L146 116"/>
+    <path d="M92 418 L300 60"/>
+    <path d="M64 257 L454 116"/>
+    <path d="M146 116 L536 257"/>
+  </g>
+  <g stroke="#1766a6" stroke-width="3" fill="none">
+    <path d="M300 60 L454 116 L536 257 L508 418 L382 524 L218 524 L92 418 L64 257 L146 116 Z"/>
+  </g>
+  <g fill="white" stroke="#172033" stroke-width="2">
+    <circle cx="300" cy="60" r="19"/>
+    <circle cx="454" cy="116" r="19"/>
+    <circle cx="536" cy="257" r="19"/>
+    <circle cx="508" cy="418" r="19"/>
+    <circle cx="382" cy="524" r="19"/>
+    <circle cx="218" cy="524" r="19"/>
+    <circle cx="92" cy="418" r="19"/>
+    <circle cx="64" cy="257" r="19"/>
+    <circle cx="146" cy="116" r="19"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="18" text-anchor="middle" fill="#172033">
+    <text x="300" y="66">0</text>
+    <text x="454" y="122">1</text>
+    <text x="536" y="263">2</text>
+    <text x="508" y="424">3</text>
+    <text x="382" y="530">4</text>
+    <text x="218" y="530">5</text>
+    <text x="92" y="424">6</text>
+    <text x="64" y="263">7</text>
+    <text x="146" y="122">8</text>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="15" fill="#172033">
+    <path d="M60 570 H110" stroke="#1766a6" stroke-width="3"/>
+    <text x="120" y="575">Ring links: jumps +1 and -1</text>
+    <path d="M60 597 H110" stroke="#bd5a00" stroke-width="2.5" stroke-dasharray="8 5"/>
+    <text x="120" y="602">Chords: jumps +3 and -3</text>
+    <text x="300" y="627" text-anchor="middle" font-size="13">Each line = two directed links of capacity 1. Crossings are not nodes.</text>
+  </g>
+</svg>
