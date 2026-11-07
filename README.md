@@ -1,0 +1,1 @@
+Assignment 4 relies on a mix of solutions. This repo should be used for part 2, since MILP works better and more generally than a greedy search or heuristic solver. But for part 1, check assignment4_tex.pdf, which uses an algorithm that checks a bound for symmetric circulant topologies to meet it, and searches for the optimal topology (this beats Chordal Ring).
